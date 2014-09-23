@@ -32,19 +32,6 @@ public final class YaccPreReceiveHook implements PreReceiveHook
 {
     private static final Logger log = LoggerFactory.getLogger(YaccPreReceiveHook.class);
 
-    public static final String ERROR_BEARS = "\n" +
-            "  (c).-.(c)    (c).-.(c)    (c).-.(c)    (c).-.(c)    (c).-.(c) \n" +
-            "   / ._. \\      / ._. \\      / ._. \\      / ._. \\      / ._. \\ \n" +
-            " __\\( Y )/__  __\\( Y )/__  __\\( Y )/__  __\\( Y )/__  __\\( Y )/__\n" +
-            "(_.-/'-'\\-._)(_.-/'-'\\-._)(_.-/'-'\\-._)(_.-/'-'\\-._)(_.-/'-'\\-._)\n" +
-            "   || E ||      || R ||      || R ||      || O ||      || R ||\n" +
-            " _.' `-' '._  _.' `-' '._  _.' `-' '._  _.' `-' '._  _.' `-' '.\n" +
-            "(.-./`-'\\.-.)(.-./`-`\\.-.)(.-./`-`\\.-.)(.-./`-'\\.-.)(.-./`-`\\.-.)\n" +
-            " `-'     `-'  `-'     `-'  `-'     `-'  `-'     `-'  `-'     `-' \n" +
-            "\n" +
-            "\n" +
-            "Push rejected.\n";
-
     private final  YaccHook yaccHook;
     private final PluginSettingsFactory pluginSettingsFactory;
     private final SecurityService securityService;
