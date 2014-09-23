@@ -22,6 +22,7 @@ import com.atlassian.stash.setting.Settings;
 import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.HashMap;
 
 /**
@@ -49,6 +50,16 @@ public final class YaccPreReceiveHook implements PreReceiveHook
         this.repositoryHookService = repositoryHookService;
     }
 
+    void addStringFieldValue(HashMap<String, Object> config,HashMap<String, String> settingsMap,String fieldName) {
+        String o;
+        o=settingsMap.get(fieldName);
+        if(o!=null && !o.isEmpty())config.put(fieldName,o);
+    }
+    void addBoolFieldValue(HashMap<String, Object> config,HashMap<String, String> settingsMap,String fieldName) {
+        String o;
+        o=settingsMap.get(fieldName);
+        if(o!=null && (o.equals("on") || o.equals("true")))config.put(fieldName,true);
+    }
     @Override
     public boolean onReceive(final Repository repository,
                              @Nonnull Collection<RefChange> refChanges, @Nonnull HookResponse hookResponse)
@@ -72,10 +83,24 @@ public final class YaccPreReceiveHook implements PreReceiveHook
             pluginSettings = pluginSettingsFactory.createGlobalSettings();
             
             @SuppressWarnings("unchecked")
-            HashMap<String, Object> config = (HashMap<String, Object>) pluginSettings.get(ConfigServlet.SETTINGS_MAP);
-            if(config == null) {
-                // Server configuration not stored    
-                config = new HashMap<String, Object>();
+            HashMap<String, Object> config =  new HashMap<String, Object>();
+            HashMap<String, String> settingsMap = (HashMap<String, String>) pluginSettings.get(ConfigServlet.SETTINGS_MAP);
+            if(settingsMap != null) {
+                // Convert plugin setting to expected datatypes
+                addBoolFieldValue(config,settingsMap,"requireMatchingAuthorEmail");
+                addBoolFieldValue(config,settingsMap,"requireMatchingAuthorName");
+                addStringFieldValue(config,settingsMap,"commitMessageRegex");
+                addBoolFieldValue(config,settingsMap,"requireJiraIssue");
+                addBoolFieldValue(config,settingsMap,"ignoreUnknownIssueProjectKeys");
+                addStringFieldValue(config,settingsMap,"issueJqlMatcher");
+                addBoolFieldValue(config,settingsMap,"excludeMergeCommits");
+                addStringFieldValue(config,settingsMap,"excludeByRegex");
+                addBoolFieldValue(config,settingsMap,"excludeServiceUserCommits");
+            }
+            for (Map.Entry<String, Object> entry : config.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                log.debug("got plugin config "+key+"="+value+" "+value.getClass().getName());
             }
             /* Watershed commits are not relevant in global hook configuration context */
             settings=repositoryHookService.createSettingsBuilder()

@@ -98,6 +98,7 @@ public class ConfigServlet extends HttpServlet {
         for (Map.Entry<String, Object> entry : settingsMap.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
+            log.debug("got plugin config "+key+"="+value+" "+value.getClass().getName());
             if(value instanceof String){
                 fields.put(key,(String)value);
             }
@@ -138,6 +139,7 @@ public class ConfigServlet extends HttpServlet {
     {
         settingsMap.clear();
 
+        // Plugin settings persister supports onlt map of strings
         addStringFieldValue(settingsMap,req,"requireMatchingAuthorEmail");
         addStringFieldValue(settingsMap,req,"requireMatchingAuthorName");
         addStringFieldValue(settingsMap,req,"commitMessageRegex");
@@ -157,6 +159,11 @@ public class ConfigServlet extends HttpServlet {
         if (fieldErrors.size()>0) {
             doGetContinue(req,resp);
             return;
+        }
+        for (Map.Entry<String, Object> entry : settingsMap.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            log.debug("save plugin config "+key+"="+value+" "+value.getClass().getName());
         }
         pluginSettings.put(SETTINGS_MAP, settingsMap);
         String redirectUrl;
