@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.net.SocketTimeoutException;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
@@ -278,6 +279,8 @@ public class YaccServiceImpl implements YaccService
                 CredentialsRequiredException cred = (CredentialsRequiredException)e.getCause();
                 errors.add(String.format("%s: Unable to validate JIRA issue because there was an authentication failure when communicating with JIRA.", issueKey.getFullyQualifiedIssueKey()));
                 errors.add(String.format("To authenticate, visit %s in a web browser.", cred.getAuthorisationURI().toASCIIString()));
+            } else if(e.getCause() instanceof SocketTimeoutException) {
+                log.error("JIRA communication error. Assume issue exsists to avoid denay of service", e);
             } else {
                 log.error("unexpected exception while trying to validate JIRA issue", e);
                 errors.add(String.format("%s: Unable to validate JIRA issue due to an unexpected exception. Please see stack trace in logs.", issueKey.getFullyQualifiedIssueKey()));

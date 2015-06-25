@@ -45,6 +45,7 @@ public final class YaccHook implements PreReceiveRepositoryHook
     public boolean onReceive(@Nonnull RepositoryHookContext repositoryHookContext,
                              @Nonnull Collection<RefChange> refChanges, @Nonnull HookResponse hookResponse)
     {
+        log.debug("On receive");
         List<String> errors = Lists.newArrayList();
 
         for (RefChange rf : refChanges)
