@@ -64,7 +64,7 @@ public class JiraServiceImpl implements JiraService
 
         final ApplicationLinkRequestFactory fac = getJiraApplicationLink().createAuthenticatedRequestFactory();
 
-        ApplicationLinkRequest req = fac.createRequest(Request.MethodType.GET, "/rest/api/2/issue/"+issueKey.getFullyQualifiedIssueKey());
+        ApplicationLinkRequest req = fac.createRequest(Request.MethodType.GET, "/rest/api/2/issue/"+issueKey.getFullyQualifiedIssueKey()+"?fields=key");
 
         return req.execute(new ApplicationLinkResponseHandler<Boolean>()
         {
